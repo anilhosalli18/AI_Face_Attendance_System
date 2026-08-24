@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Face Attendance System | Cloud Web Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">🤖</div>
+                <div class="brand-text">
+                    <h2>AI Attendance</h2>
+                    <span class="badge">Enterprise Cloud</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" id="btn-tab-scanner" onclick="switchTab('scanner')">
+                    <span class="icon">📷</span>
+                    <span>Live Scanner</span>
+                </button>
+                <button class="nav-item" id="btn-tab-dashboard" onclick="switchTab('dashboard')">
+                    <span class="icon">📊</span>
+                    <span>Admin Dashboard</span>
+                </button>
+                <button class="nav-item" id="btn-tab-register" onclick="switchTab('register')">
+                    <span class="icon">👤</span>
+                    <span>Register Face</span>
+                </button>
+                <button class="nav-item" id="btn-tab-logs" onclick="switchTab('logs')">
+                    <span class="icon">📜</span>
+                    <span>System Audit Logs</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="db-status" id="db-status-badge">
+                    <span class="dot"></span>
+                    <span id="db-status-text">Connecting DB...</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="top-header">
+                <div class="page-title">
+                    <h1 id="current-page-title">Live Face Recognition Scanner</h1>
+                    <p id="current-page-subtitle">Real-time automated check-in & check-out</p>
+                </div>
+                <div class="header-right">
+                    <div class="clock-card" id="digital-clock">00:00:00 AM</div>
+                </div>
+            </header>
+
+            <!-- TAB 1: LIVE SCANNER -->
+            <section class="tab-content active" id="tab-scanner">
+                <div class="scanner-grid">
+                    <!-- Live Camera Feed Container -->
+                    <div class="camera-card glass-panel">
+                        <div class="card-header">
+                            <h3>Live Camera Stream</h3>
+                            <div class="status-pill" id="camera-status">Initializing Camera...</div>
+                        </div>
+                        <div class="video-wrapper">
+                            <video id="webcam" autoplay playsinline muted></video>
+                            <canvas id="overlay-canvas"></canvas>
+                            <div class="scanner-laser"></div>
+                        </div>
+                        <div class="camera-controls">
+                            <button class="btn btn-secondary" onclick="toggleCamera()">Toggle Camera</button>
+                        </div>
+                    </div>
+
+                    <!-- Recognition Output & Action Panel -->
+                    <div class="recognition-card glass-panel">
+                        <div class="card-header">
+                            <h3>Face Identification</h3>
+                        </div>
+
+                        <div class="recognition-box" id="recognition-box">
+                            <div class="empty-state" id="empty-state">
+                                <div class="pulse-ring"></div>
+                                <p>Look into the camera to scan face</p>
+                            </div>
+
+                            <div class="identified-state hidden" id="identified-state">
+                                <div class="avatar-glow">👤</div>
+                                <h2 id="id-name">EMPLOYEE NAME</h2>
+                                <p class="emp-id-tag" id="id-emp-id">EMP-001</p>
+                                
+                                <div class="metric-badge">
+                                    <span>Confidence Match</span>
+                                    <strong id="id-confidence">98.5%</strong>
+                                </div>
+
+                                <div class="action-prompt" id="action-prompt">
+                                    <span class="action-tag" id="action-tag">LOGIN</span>
+                                    <button class="btn btn-primary btn-large" id="btn-confirm" onclick="confirmSelectedFace()">
+                                        Confirm Attendance
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Voice Feedback Banner -->
+                        <div class="voice-banner" id="voice-banner">
+                            <span class="voice-icon">🔊</span>
+                            <span id="voice-message">Voice Assistant Ready</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: ADMIN DASHBOARD -->
+            <section class="tab-content" id="tab-dashboard">
+                <!-- KPI Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon cyan">👥</div>
+                        <div class="stat-info">
+                            <h4>Total Employees</h4>
+                            <h2 id="stat-total">0</h2>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon green">✅</div>
+                        <div class="stat-info">
+                            <h4>Present Today</h4>
+                            <h2 id="stat-present">0</h2>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon amber">⏰</div>
+                        <div class="stat-info">
+                            <h4>Late Arrivals</h4>
+                            <h2 id="stat-late">0</h2>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon red">❌</div>
+                        <div class="stat-info">
+                            <h4>Absent Today</h4>
+                            <h2 id="stat-absent">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Attendance Table Card -->
+                <div class="table-card glass-panel">
+                    <div class="card-header">
+                        <h3>Today's Attendance Sheet</h3>
+                        <button class="btn btn-secondary" onclick="loadDashboardData()">Refresh Data</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Employee Name</th>
+                                    <th>Department</th>
+                                    <th>Date</th>
+                                    <th>Login Time</th>
+                                    <th>Logout Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-table-body">
+                                <tr>
+                                    <td colspan="7" class="text-center">Loading attendance records...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: REGISTER NEW FACE -->
+            <section class="tab-content" id="tab-register">
+                <div class="register-grid">
+                    <div class="form-card glass-panel">
+                        <h3>Employee Face Registration</h3>
+                        <form id="register-form" onsubmit="handleRegisterSubmit(event)">
+                            <div class="form-group">
+                                <label for="reg-emp-id">Employee ID *</label>
+                                <input type="text" id="reg-emp-id" placeholder="e.g. EMP-101" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-emp-name">Full Name *</label>
+                                <input type="text" id="reg-emp-name" placeholder="e.g. Darshan S P" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-dept">Department</label>
+                                <select id="reg-dept">
+                                    <option value="Engineering">Engineering</option>
+                                    <option value="AI & Robotics">AI & Robotics</option>
+                                    <option value="Cybersecurity">Cybersecurity</option>
+                                    <option value="Operations">Operations</option>
+                                    <option value="HR">HR</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-email">Email Address</label>
+                                <input type="email" id="reg-email" placeholder="name@company.com">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-large">Capture Face & Register</button>
+                        </form>
+                    </div>
+
+                    <div class="snap-card glass-panel">
+                        <h3>Camera Snapshot</h3>
+                        <div class="snap-preview">
+                            <video id="reg-webcam" autoplay playsinline muted></video>
+                            <canvas id="reg-canvas" class="hidden"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: SYSTEM LOGS -->
+            <section class="tab-content" id="tab-logs">
+                <div class="table-card glass-panel">
+                    <div class="card-header">
+                        <h3>System Audit Logs</h3>
+                        <button class="btn btn-secondary" onclick="loadLogsData()">Refresh Logs</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Event</th>
+                                    <th>Level</th>
+                                    <th>Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-table-body">
+                                <tr>
+                                    <td colspan="4" class="text-center">Loading system logs...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

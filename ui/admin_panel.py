@@ -800,7 +800,7 @@ class AdminPanel(ctk.CTkFrame):
         query = {} if level_filter == "ALL" else {"level": level_filter}
         icons = {"SUCCESS": "✅", "INFO": "ℹ️", "WARNING": "⚠️", "ERROR": "❌"}
 
-        for log in (logs or []).find(query).sort("timestamp", -1).limit(200):
+        for log in logs.find(query).sort("timestamp", -1).limit(200):
             icon = icons.get(log.get("level", ""), "•")
             tree.insert("", "end", values=(
                 log.get("timestamp", ""),

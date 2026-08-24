@@ -1,11 +1,16 @@
+import os
+import sys
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 from pymongo import MongoClient
 from datetime import datetime
 
 # ==========================================
-# DATABASE.PY — MongoDB Local Connection
+# DATABASE.PY — MongoDB Dynamic Connection
 # ==========================================
 
-MONGO_URI = "mongodb://localhost:27017/"
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
 
 try:
     client = MongoClient(

@@ -1,4 +1,17 @@
+# Python virtual environments
 env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# IDE and OS files
 .vscode/
+.idea/
+.DS_Store
+Thumbs.db
