@@ -27,8 +27,8 @@ The system automatically detects and recognizes employees' faces and records **l
 
 Example:
 
-* "Welcome Darshan. Attendance marked successfully."
-* "Goodbye Darshan. Logout recorded."
+* "Welcome Anil. Attendance marked successfully."
+* "Goodbye Anil. Logout recorded."
 
 ✅ **Confidence-Based Recognition**
 
@@ -97,7 +97,7 @@ face_attendance/
 ### 1️⃣ Clone the Repository
 
 ```
-git clone https://github.com/spdarshan46/ai-attendace.git
+git clone https://github.com/anilhosalli18/ai-attendace.git
 cd ai-attendace
 ```
 
@@ -190,10 +190,10 @@ python attendance.py
 
 # 👨‍💻 Author
 
-**S P Darshan**
+**Anil H**
 
 Computer Science Engineering Student
-Interested in **AI, Cybersecurity, and Full Stack Development**
+Interested in **AI & Full Stack Development**
 
 GitHub:
-https://github.com/spdarshan46
+https://github.com/anilhosalli18
