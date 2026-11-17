@@ -15,3 +15,19 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Face data & biometric encodings (Privacy & Security)
+faces.pkl
+*.pkl
+faces/
+*.jpg
+*.jpeg
+*.png
+
+# Wheels & local build artifacts
+Install dlib/
+*.whl
+dist/
+build/
+*.egg-info/
+
